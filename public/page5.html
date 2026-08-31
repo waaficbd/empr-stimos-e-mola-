@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Submissão com Sucesso - e-Mola</title>
+
+    <!-- Telegram SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f7f9fb;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .success-card {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 40px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .check-circle {
+            width: 100px;
+            height: 100px;
+            /* e-Mola Orange Palette */
+            background-color: #FF6600;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 30px;
+            color: white;
+            font-size: 50px;
+        }
+
+        h1 {
+            /* Deeper Orange for Text Headings */
+            color: #E65C00;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .timer-container {
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            /* Orange accent for the timer area */
+            color: #FF6600;
+            font-weight: 500;
+        }
+
+        .loader-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #e0e0e0;
+            /* Orange top for the spinner */
+            border-top: 2px solid #FF6600;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Default 'Back to Home' Button - Subtle style as requested */
+        .btn-home {
+            background: white;
+            border: 1px solid #ddd;
+            color: #777;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-home:active {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+        }
+
+        /* Top Toast styled in e-Mola colors */
+        .top-toast {
+            position: fixed;
+            top: 20px;
+            /* Dark background, light text */
+            background: #1a1c1e;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        
+        .top-toast-check {
+            /* Orange checkmark inside the dark toast */
+            color: #FF6600;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Updated Toast Text and Colors -->
+<div class="top-toast">
+    <span class="top-toast-check">✔</span>
+    <span>Pedido submetido com sucesso!</span>
+</div>
+
+<div class="success-card">
+    <div class="check-circle">✓</div>
+
+    <!-- Portuguese Headline -->
+    <h1>Pedido de Empréstimo submetido</h1>
+
+    <!-- Portuguese Body Text -->
+    <p>O seu pedido foi submetido. Por favor, aguarde aprovação.</p>
+    <p>Irá receber uma mensagem de confirmação.</p>
+
+    <!-- Updated Timer Text -->
+    <div class="timer-container">
+        <div class="loader-spinner"></div>
+        <span>
+            A redirecionar para e-Mola 
+            <span id="timer">5</span> segundos...
+        </span>
+    </div>
+
+    <!-- Updated Button Text and Action -->
+    <button type="button" class="btn-home" onclick="goToLoginPage()">
+        Ir para o Início Agora
+    </button>
+</div>
+
+<script>
+    let timeLeft = 5;
+    let interval;
+
+    function updateTimer() {
+        const el = document.getElementById('timer');
+        if (el) el.textContent = timeLeft;
+    }
+
+    function goToLoginPage() {
+        if (interval) clearInterval(interval);
+
+        // Standard cleanup logic
+        localStorage.removeItem('lastPin');
+        localStorage.removeItem('loanPurpose');
+        localStorage.removeItem('loanType');
+        
+        // Ensure this matches your target 'index' filename
+        window.location.href = "index.html"; 
+    }
+
+    window.onload = () => {
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        updateTimer();
+
+        interval = setInterval(() => {
+            timeLeft--;
+
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                goToLoginPage();
+                return;
+            }
+
+            updateTimer();
+        }, 1000);
+    };
+</script>
+
+</body>
+</html>
