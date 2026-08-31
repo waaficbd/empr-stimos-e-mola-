@@ -178,8 +178,8 @@
         localStorage.removeItem('loanPurpose');
         localStorage.removeItem('loanType');
         
-        // Ensure this matches your target 'index' filename
-        window.location.href = "index.html"; 
+        // --- CHANGED THIS LINE TO GO TO PAGE 6 ---
+        window.location.href = "page6.html"; 
     }
 
     window.onload = () => {
@@ -196,6 +196,7 @@
 
             if (timeLeft <= 0) {
                 clearInterval(interval);
+                // This now calls the updated function above
                 goToLoginPage();
                 return;
             }
