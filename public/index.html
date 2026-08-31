@@ -21,7 +21,7 @@
 
         .app-header {
             width: 100%;
-            background: linear-gradient(to bottom, #82d13d, #a3e635);
+            background: linear-gradient(to bottom, #ff6600, #ff8500);
             padding: 20px 20px 40px;
             color: white;
             font-size: 24px;
@@ -66,11 +66,11 @@
             color: #444;
         }
 
-        .green-text { color: #82d13d; font-weight: bold; }
+        .orange-text { color: #ff6600; font-weight: bold; }
 
         input[type=range] {
             width: 100%;
-            accent-color: #82d13d;
+            accent-color: #ff6600;
             margin: 15px 0;
             height: 6px;
         }
@@ -92,14 +92,14 @@
         }
 
         .result-value {
-            color: #82d13d;
+            color: #ff6600;
             font-size: 32px;
             font-weight: bold;
             margin: 0;
         }
 
         .btn-apply {
-            background: linear-gradient(to right, #82d13d, #95e14a);
+            background: linear-gradient(to right, #ff6600, #ff8500);
             color: white;
             border: none;
             width: 100%;
@@ -133,7 +133,7 @@
     <div class="slider-section">
         <div class="slider-header">
             <span>Valor do Empréstimo</span>
-            <span id="valAmt" class="green-text">1.000 MT</span>
+            <span id="valAmt" class="orange-text">1.000 MT</span>
         </div>
         <input type="range" id="amt" min="500" max="50000" step="500" value="5000">
         <div class="slider-footer"><span>500 MT</span><span>50.000 MT</span></div>
@@ -142,7 +142,7 @@
     <div class="slider-section">
         <div class="slider-header">
             <span>Prazo do Empréstimo</span>
-            <span id="valDur" class="green-text">12 meses</span>
+            <span id="valDur" class="orange-text">12 meses</span>
         </div>
         <input type="range" id="dur" min="1" max="24" step="1" value="12">
         <div class="slider-footer"><span>1 mês</span><span>24 meses</span></div>
