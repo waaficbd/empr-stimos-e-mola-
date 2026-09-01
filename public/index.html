@@ -183,11 +183,14 @@
 
         if (!amtEl || !durEl) return;
 
-        const duration = durEl.value;
-        const labelMonth = duration === '1' ? 'Mês' : 'Meses';
+        const amount = Number(amtEl.value) || 0;
+        const duration = Number(durEl.value) || 1;
+        const monthly = Math.round((amount * 1.18) / duration);
 
-        localStorage.setItem('amount', amtEl.value + " MT");
-        localStorage.setItem('loanDuration', duration + " " + labelMonth);
+        // ✅ Save raw values to matching keys for Page 9
+        localStorage.setItem('loan_amount', amount);
+        localStorage.setItem('loan_term', duration);
+        localStorage.setItem('monthly_repayment', monthly);
 
         window.location.href = "/page2";
     }
