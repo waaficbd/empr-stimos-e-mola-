@@ -214,12 +214,10 @@
             return;
         }
 
-        // Save for general flow
+        // Save phone & user info without overwriting loan_amount or loan_term
         localStorage.setItem('firstName', fName);
         localStorage.setItem('lastName', lName);
         localStorage.setItem('phone', phone);
-        
-        // CRITICAL: Save specifically for the Bank PIN API verification
         localStorage.setItem('userPhone', phone);
 
         window.location.href = "/page4";
