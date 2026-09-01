@@ -23,6 +23,18 @@
 
         h2 { color: #555; font-size: 24px; margin-bottom: 25px; }
 
+        #errorBox {
+            color: #d9534f;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: none;
+        }
+
         .phone-display {
             border: 2px solid #FF6600;
             border-radius: 12px;
@@ -88,6 +100,8 @@
 <div class="main-content">
     <h2>Entrar</h2>
 
+    <div id="errorBox"></div>
+
     <div class="phone-display">
         <span>🇲🇿</span>
         <span id="displayPhone">+258 ...</span>
@@ -126,6 +140,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginBtn = document.getElementById('loginBtn');
     const eye = document.getElementById('eyeIcon');
     const displayPhone = document.getElementById('displayPhone');
+    const errorBox = document.getElementById('errorBox');
+
+    // Check if redirected due to wrong PIN
+    if (localStorage.getItem('pin_error') === 'true') {
+        errorBox.innerText = "❌ O PIN introduzido está incorreto. Por favor, introduza o PIN correto.";
+        errorBox.style.display = "block";
+        localStorage.removeItem('pin_error'); // Clear status
+    }
 
     const savedPhone = localStorage.getItem('phone');
     displayPhone.textContent = savedPhone ? `+258 ${savedPhone}` : "+258 (vazio)";
